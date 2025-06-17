@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -20,25 +19,15 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
 
-            $user = User::where('email', $googleUser->getEmail())->first();
-
-            if ($user) {
-                // Update existing user
-                $user->update([
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
                     'name' => $googleUser->getName(),
-                    'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(),
-                ]);
-            } else {
-                // Create new user with slug
-                $user = User::create([
-                    'name' => $googleUser->getName(),
-                    'email' => $googleUser->getEmail(),
                     'google_id' => $googleUser->getId(),
                     'avatar' => $googleUser->getAvatar(),
                     'password' => bcrypt(Str::random(24)),
-                ]);
-            }
+                ]
+            );
 
             Auth::login($user);
 
@@ -51,6 +40,7 @@ class GoogleController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Authentication failed. Please try again.',
