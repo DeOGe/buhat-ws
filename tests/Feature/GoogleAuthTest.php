@@ -17,7 +17,7 @@ beforeEach(function () {
     Config::set('services.google', [
         'client_id' => 'mock_client_id',
         'client_secret' => 'mock_client_secret',
-        'redirect' => 'http://localhost/api/auth/google/callback', // Ensure this matches your routes/api.php or routes/web.php
+        'redirect' => 'http://localhost/auth/google/callback', // Ensure this matches your routes/api.php or routes/web.php
     ]);
 
     Socialite::spy(); // Clears and sets up a fresh mock for each test
@@ -26,18 +26,18 @@ beforeEach(function () {
 it('redirects to google for authentication', function () {
     // Set the expectation directly on the Socialite facade
     Socialite::shouldReceive('driver')
-             ->with('google')
-             ->andReturn(
-                 Mockery::mock(\Laravel\Socialite\Two\GoogleProvider::class)
-                     ->shouldReceive('stateless') // <--- ADD THIS LINE to expect stateless()
-                     ->andReturnSelf()            // <--- ADD THIS LINE to allow chaining
-                     ->shouldReceive('redirect')
-                     ->andReturn(redirect('https://accounts.google.com/o/oauth2/auth'))
-                     ->getMock()
-             );
+        ->with('google')
+        ->andReturn(
+            Mockery::mock(\Laravel\Socialite\Two\GoogleProvider::class)
+                ->shouldReceive('stateless') // <--- ADD THIS LINE to expect stateless()
+                ->andReturnSelf()            // <--- ADD THIS LINE to allow chaining
+                ->shouldReceive('redirect')
+                ->andReturn(redirect('https://accounts.google.com/o/oauth2/auth'))
+                ->getMock()
+        );
 
     // Ensure your route matches what's in routes/api.php
-    $response = $this->get('/api/auth/google');
+    $response = $this->get('/auth/google');
 
     $response->assertRedirect('https://accounts.google.com/o/oauth2/auth');
 });
@@ -66,7 +66,7 @@ it('can register a new user via google callback and issue sanctum token', functi
                 ->getMock()
         );
 
-    $response = $this->get('/api/auth/google/callback');
+    $response = $this->get('/auth/google/callback');
 
     $this->assertDatabaseHas('users', [
         'email' => 'john.doe@example.com',
@@ -78,13 +78,17 @@ it('can register a new user via google callback and issue sanctum token', functi
     expect(Auth::user()->email)->toBe('john.doe@example.com');
 
     $response->assertStatus(200)
-             ->assertJsonStructure([
-                 'user' => [
-                     'id', 'name', 'email', 'google_id', 'avatar',
-                 ],
-                 'access_token',
-                 'token_type',
-             ]);
+        ->assertJsonStructure([
+            'user' => [
+                'id',
+                'name',
+                'email',
+                'google_id',
+                'avatar',
+            ],
+            'access_token',
+            'token_type',
+        ]);
 
     expect($response->json('access_token'))->not->toBeEmpty();
     expect($response->json('token_type'))->toBe('Bearer');
@@ -123,7 +127,7 @@ it('can log in an existing user via google callback and issue sanctum token', fu
         );
 
     // Change to /api/auth/google/callback
-    $response = $this->get('/api/auth/google/callback');
+    $response = $this->get('/auth/google/callback');
 
     $this->assertDatabaseHas('users', [
         'email' => 'existing.user@example.com',
@@ -135,13 +139,17 @@ it('can log in an existing user via google callback and issue sanctum token', fu
     expect(Auth::user()->email)->toBe('existing.user@example.com');
 
     $response->assertStatus(200)
-             ->assertJsonStructure([
-                 'user' => [
-                     'id', 'name', 'email', 'google_id', 'avatar',
-                 ],
-                 'access_token',
-                 'token_type',
-             ]);
+        ->assertJsonStructure([
+            'user' => [
+                'id',
+                'name',
+                'email',
+                'google_id',
+                'avatar',
+            ],
+            'access_token',
+            'token_type',
+        ]);
 
     expect($response->json('access_token'))->not->toBeEmpty();
     expect($response->json('token_type'))->toBe('Bearer');
@@ -163,14 +171,14 @@ it('handles google callback errors gracefully', function () {
         );
 
     // Change to /api/auth/google/callback
-    $response = $this->get('/api/auth/google/callback');
+    $response = $this->get('/auth/google/callback');
 
     $this->assertDatabaseCount('users', 0);
 
     expect(Auth::check())->toBeFalse();
 
     $response->assertStatus(500)
-             ->assertJson([
-                 'message' => 'Authentication failed. Please try again.',
-             ]);
+        ->assertJson([
+            'message' => 'Authentication failed. Please try again.',
+        ]);
 });
