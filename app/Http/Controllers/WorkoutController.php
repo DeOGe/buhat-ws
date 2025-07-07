@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Workout;
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\UpdateWorkoutRequest;
+use App\Http\Resources\WorkoutResource;
 
 class WorkoutController extends Controller
 {
@@ -13,47 +14,33 @@ class WorkoutController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return WorkoutResource::collection(Workout::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWorkoutRequest $request)
+    public function store(StoreWorkoutRequest $request): WorkoutResource
     {
-        //
+        $workout = Workout::create($request->validated());
+        return new WorkoutResource($workout);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Workout $workout)
+    public function show(Workout $workout): WorkoutResource
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Workout $workout)
-    {
-        //
+        return new WorkoutResource($workout);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateWorkoutRequest $request, Workout $workout)
+    public function update(UpdateWorkoutRequest $request, Workout $workout): WorkoutResource
     {
-        //
+        $workout->update($request->validated());
+        return new WorkoutResource($workout);
     }
 
     /**
@@ -61,6 +48,8 @@ class WorkoutController extends Controller
      */
     public function destroy(Workout $workout)
     {
-        //
+        $workout->delete();
+
+        return response()->noContent();
     }
 }

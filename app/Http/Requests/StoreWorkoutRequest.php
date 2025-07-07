@@ -22,7 +22,11 @@ class StoreWorkoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required|exists:users,id', // adjust if primary key is 'id'
+            'workout_date' => 'required|date',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s|after:start_time',
+            'notes' => 'nullable|string|max:1000',
         ];
     }
 }

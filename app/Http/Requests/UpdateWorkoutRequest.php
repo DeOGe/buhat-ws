@@ -22,7 +22,11 @@ class UpdateWorkoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'sometimes|exists:users,id',
+            'workout_date' => 'sometimes|date',
+            'start_time' => 'sometimes|date_format:H:i:s',
+            'end_time' => 'sometimes|date_format:H:i:s|after:start_time',
+            'notes' => 'nullable|string|max:1000',
         ];
     }
 }
