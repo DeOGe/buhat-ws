@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Muscle extends Model
 {
     use HasFactory;
+    protected $table = 'muscles';
+    protected $primaryKey = 'muscle_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'name',
         'description',
