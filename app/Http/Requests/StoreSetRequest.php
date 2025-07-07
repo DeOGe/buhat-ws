@@ -22,7 +22,13 @@ class StoreSetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'workout_exercise_id' => ['required', 'exists:workout_exercises,workout_exercise_id'],
+            'set_number'          => ['required', 'integer', 'min:1'],
+            'reps'                => ['nullable', 'integer', 'min:0'],
+            'weight'              => ['nullable', 'numeric', 'min:0'],
+            'time'                => ['nullable', 'regex:/^\d{2}:\d{2}$/'], // e.g., "00:30"
+            'distance'            => ['nullable', 'numeric', 'min:0'],
+            'notes'               => ['nullable', 'string'],
         ];
     }
 }
