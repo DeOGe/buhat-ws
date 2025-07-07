@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class WorkoutExercise extends Model
 {
     use HasFactory;
+    protected $table = 'workout_exercises';
+    protected $primaryKey = 'workout_exercise_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
+        'workout_id',
+        'exercise_id',
         'exercise_order',
     ];
 

@@ -22,7 +22,9 @@ class StoreWorkoutExerciseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'workout_id' => 'required|exists:workouts,workout_id',
+            'exercise_id' => 'required|exists:exercises,exercise_id',
+            'exercise_order' => 'required|integer|min:1',
         ];
     }
 }

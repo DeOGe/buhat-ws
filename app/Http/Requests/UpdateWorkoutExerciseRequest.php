@@ -22,7 +22,9 @@ class UpdateWorkoutExerciseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'workout_id' => 'sometimes|exists:workouts,workout_id',
+            'exercise_id' => 'sometimes|exists:exercises,exercise_id',
+            'exercise_order' => 'sometimes|integer|min:1',
         ];
     }
 }

@@ -5,62 +5,35 @@ namespace App\Http\Controllers;
 use App\Models\WorkoutExercise;
 use App\Http\Requests\StoreWorkoutExerciseRequest;
 use App\Http\Requests\UpdateWorkoutExerciseRequest;
+use App\Http\Resources\WorkoutExerciseResource;
 
 class WorkoutExerciseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return WorkoutExerciseResource::collection(WorkoutExercise::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreWorkoutExerciseRequest $request): WorkoutExerciseResource
     {
-        //
+        $workoutExercise = WorkoutExercise::create($request->validated());
+        return new WorkoutExerciseResource($workoutExercise);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreWorkoutExerciseRequest $request)
+    public function show(WorkoutExercise $workoutExercise): WorkoutExerciseResource
     {
-        //
+        return new WorkoutExerciseResource($workoutExercise);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(WorkoutExercise $workoutExercise)
+    public function update(UpdateWorkoutExerciseRequest $request, WorkoutExercise $workoutExercise): WorkoutExerciseResource
     {
-        //
+        $workoutExercise->update($request->validated());
+        return new WorkoutExerciseResource($workoutExercise);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(WorkoutExercise $workoutExercise)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateWorkoutExerciseRequest $request, WorkoutExercise $workoutExercise)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(WorkoutExercise $workoutExercise)
     {
-        //
+        $workoutExercise->delete();
+        return response()->noContent();
     }
 }
