@@ -22,12 +22,7 @@ class UpdateExerciseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
-            'description' => ['nullable', 'string'],
-            'category_id' => ['required', 'exists:categories,category_id'],
-            'equipment_id' => ['required', 'exists:equipments,equipment_id'],
-            'muscle_id' => ['required', 'exists:muscles,muscle_id'],
-            'video_url' => ['nullable', 'url'],
+            //
         ];
     }
 }
