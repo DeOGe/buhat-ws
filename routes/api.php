@@ -18,8 +18,8 @@ use App\Http\Controllers\Auth\GoogleController;
 
 
 Route::prefix('auth/google')->group(function () {
-    Route::get('/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
-    Route::get('/callback', [GoogleController::class, 'callback'])->name('google.callback');
+    Route::get('/redirect', [GoogleController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
 });
 
 
