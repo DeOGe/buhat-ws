@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     require 'user.php';
     require 'muscle.php';
-    require 'exercise.php';
-    require 'category.php';
+    // require 'exercise.php';
+    // require 'category.php';
     require 'equipment.php';
     require 'set.php';
     require 'workout.php';
