@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Set;
+use App\Models\User;
 use App\Models\WorkoutExercise;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -8,6 +9,8 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     // Ensure related record exists
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user, 'sanctum');
     $this->workoutExercise = WorkoutExercise::factory()->create();
 });
 

@@ -17,7 +17,7 @@ beforeEach(function () {
     Config::set('services.google', [
         'client_id' => 'mock_client_id',
         'client_secret' => 'mock_client_secret',
-        'redirect' => 'http://localhost/auth/google/callback', // Ensure this matches your routes/api.php or routes/web.php
+        'redirect' => 'http://localhost:8000/api/auth/google/callback', // Ensure this matches your routes/api.php or routes/web.php
     ]);
 
     Socialite::spy(); // Clears and sets up a fresh mock for each test
@@ -37,7 +37,7 @@ it('redirects to google for authentication', function () {
         );
 
     // Ensure your route matches what's in routes/api.php
-    $response = $this->get('/auth/google');
+    $response = $this->get('api/auth/google/redirect');
 
     $response->assertRedirect('https://accounts.google.com/o/oauth2/auth');
 });
@@ -66,7 +66,7 @@ it('can register a new user via google callback and issue sanctum token', functi
                 ->getMock()
         );
 
-    $response = $this->get('/auth/google/callback');
+    $response = $this->get('/api/auth/google/callback');
 
     $this->assertDatabaseHas('users', [
         'email' => 'john.doe@example.com',
@@ -127,7 +127,7 @@ it('can log in an existing user via google callback and issue sanctum token', fu
         );
 
     // Change to /api/auth/google/callback
-    $response = $this->get('/auth/google/callback');
+    $response = $this->get('api/auth/google/callback');
 
     $this->assertDatabaseHas('users', [
         'email' => 'existing.user@example.com',
@@ -171,7 +171,7 @@ it('handles google callback errors gracefully', function () {
         );
 
     // Change to /api/auth/google/callback
-    $response = $this->get('/auth/google/callback');
+    $response = $this->get('api/auth/google/callback');
 
     $this->assertDatabaseCount('users', 0);
 

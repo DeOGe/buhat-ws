@@ -2,10 +2,17 @@
 
 use App\Models\Workout;
 use App\Models\User;
+use App\Models\WorkoutExercise;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    // Ensure related record exists
+    $this->user = User::factory()->create();
+    $this->actingAs($this->user, 'sanctum');
+});
 
 it('can list workouts', function () {
     Workout::factory()->count(3)->create();
